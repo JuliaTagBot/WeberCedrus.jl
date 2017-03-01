@@ -1,7 +1,11 @@
 # WeberCedrus
 
-[![Build Status](https://travis-ci.org/haberdashPI/WeberCedrus.jl.svg?branch=master)](https://travis-ci.org/haberdashPI/WeberCedrus.jl)
+This Julia package extends Weber, to enable the use of cedrus response-pad input. It adds a series of new keys, ranging from key":cedrus0:" to key":cedrus19:'. You can see which key is which by pressing the buttons while running the following code in julia.
 
-[![Coverage Status](https://coveralls.io/repos/haberdashPI/WeberCedrus.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/haberdashPI/WeberCedrus.jl?branch=master)
+```julia
+using Weber
+run_keycode_helper(extenstions=[CedrusXID()])
+```
 
-[![codecov.io](http://codecov.io/github/haberdashPI/WeberCedrus.jl/coverage.svg?branch=master)](http://codecov.io/github/haberdashPI/WeberCedrus.jl?branch=master)
+You can also query the precise time of button presses (relative to the start of a trial)
+using the method `response_time`.
