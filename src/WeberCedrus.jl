@@ -1,0 +1,5 @@
+module WeberCedrus
+
+# package code goes here
+
+end # module
