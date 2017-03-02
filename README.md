@@ -4,7 +4,8 @@ This Julia package extends Weber, to enable the use of cedrus response-pad input
 
 ```julia
 using Weber
-run_keycode_helper(extenstions=[CedrusXID()])
+using WeberCedrus
+run_keycode_helper(extenstions=[Cedrus()])
 ```
 
 You can also query the precise time of button presses (relative to the start of a trial)

@@ -1,17 +1,17 @@
 module WeberCedrus
 
 using PyCall
-export CedrusXID, reset_response, response_time
+export Cedrus, reset_response, response_time
 
 using Weber
 import Weber: keycode, iskeydown, iskeyup, addtrial, addpractice, poll_events
 import Base: hash, isless, ==, show
 
-type CedrusXID <: Weber.Extension
+type Cedrus <: Weber.Extension
   devices::PyObject
 end
 """
-    CedrusXID()
+    Cedrus()
 
 Creates an extension for Weber experiments allowing an experiment to respond to
 events from Cedrus response-pad hardware. You can use [`iskeydown`](@ref) and
@@ -19,11 +19,11 @@ events from Cedrus response-pad hardware. You can use [`iskeydown`](@ref) and
 buttons for your response pad, run the following code, and press each of the
 buttons.
 
-    run_keycode_helper(extensions=[CedrusXID()])
+    run_keycode_helper(extensions=[Cedrus()])
 """
-function CedrusXID()
+function Cedrus()
   pyxid = pyimport_conda("pyxid","pyxid","haberdashPI")
-  CedrusXID(pyxid[:get_xid_devices]())
+  Cedrus(pyxid[:get_xid_devices]())
 end
 
 @Weber.event type CedrusDownEvent <: Weber.ExpEvent
@@ -105,14 +105,14 @@ response_time(e::CedrusUpEvent) = e.rt
 response_time(e::CedrusDownEvent) = e.rt
 
 """
-    reset_response(cedrus::CedrusXID)
+    reset_response(cedrus::Cedrus)
 
 Reset the response timer for all Cedrus response-pad devices.
 
 This function will rarely need to be explicitly called. The response timer is
 automatically reset at the start of each trial.
 """
-function reset_response(cedrus::CedrusXID)
+function reset_response(cedrus::Cedrus)
   for dev in cedrus.devices
     if dev[:is_response_device]()
       dev[:reset_base_timer]()
@@ -121,15 +121,15 @@ function reset_response(cedrus::CedrusXID)
   end
 end
 
-function addtrial(e::ExtendedExperiment{CedrusXID},moments...)
+function addtrial(e::ExtendedExperiment{Cedrus},moments...)
   addtrial(next(e),moment(reset_response,extension(e)),moments...)
 end
 
-function addpractice(e::ExtendedExperiment{CedrusXID},moments...)
+function addpractice(e::ExtendedExperiment{Cedrus},moments...)
   addpractice(next(e),moment(reset_response,extension(e)),moments...)
 end
 
-function poll_events(callback::Function,exp::ExtendedExperiment{CedrusXID},time::Float64)
+function poll_events(callback::Function,exp::ExtendedExperiment{Cedrus},time::Float64)
   poll_events(callback,next(exp),time)
   for dev in extension(exp).devices
     if dev[:is_response_device]()
