@@ -1,7 +1,7 @@
 module WeberCedrus
 
 using PyCall
-export Cedrus, reset_response, response_time
+export Cedrus
 
 using Weber
 import Weber: keycode, iskeydown, iskeyup, addtrial, addpractice, poll_events
@@ -9,7 +9,9 @@ import Base: hash, isless, ==, show
 
 type Cedrus <: Weber.Extension
   devices::PyObject
+  trial_statr::Float64
 end
+
 """
     Cedrus()
 
@@ -29,7 +31,6 @@ end
 @Weber.event type CedrusDownEvent <: Weber.ExpEvent
   code::Int
   port::Int
-  rt::Float64
   time::Float64
 end
 
@@ -37,7 +38,6 @@ end
 @Weber.event type CedrusUpEvent <: Weber.ExpEvent
   code::Int
   port::Int
-  rt::Float64
   time::Float64
 end
 
@@ -93,25 +93,9 @@ iskeyup(event::CedrusUpEvent) = true
 iskeyup(key::CedrusKey) = e -> iskeydown(e,key)
 iskeyup(event::CedrusUpEvent,key::CedrusKey) = event.code == key.code
 
-"""
-    response_time(e::ExpEvent)
+time(e::CedrusUpEvent) = e.time
+time(e::CedrusDownEvent) = e.time
 
-Get the response time an event occured at. Only meaningful for response pad
-events (returns NaN in other cases). The response time is normally measured from
-the start of a trial (see `reset_response`).
-"""
-response_time(e::Weber.ExpEvent) = NaN
-response_time(e::CedrusUpEvent) = e.rt
-response_time(e::CedrusDownEvent) = e.rt
-
-"""
-    reset_response(cedrus::Cedrus)
-
-Reset the response timer for all Cedrus response-pad devices.
-
-This function will rarely need to be explicitly called. The response timer is
-automatically reset at the start of each trial.
-"""
 function reset_response(cedrus::Cedrus)
   for dev in cedrus.devices
     if dev[:is_response_device]()
@@ -119,6 +103,7 @@ function reset_response(cedrus::Cedrus)
       dev[:reset_rt_timer]()
     end
   end
+  cedrus.trial_start = tick()
 end
 
 function addtrial(e::ExtendedExperiment{Cedrus},moments...)
@@ -137,11 +122,13 @@ function poll_events(callback::Function,exp::ExtendedExperiment{Cedrus},time::Fl
       while dev[:response_queue_size]() > 0
         resp = dev[:get_next_response]()
         if resp["pressed"]
-          callback(exp,CedrusDownEvent(resp["key"],resp["port"],
-                                       resp["time"],time))
+          callback(exp,
+                   CedrusDownEvent(resp["key"],resp["port"],
+                                   resp["time"] + extension(exp).trial_start))
         else
-          callback(exp,CedrusUpEvent(resp["key"],resp["port"],
-                                     resp["time"],time))
+          callback(exp,
+                   CedrusUpEvent(resp["key"],resp["port"],
+                                 resp["time"] + extension(exp).trial_start))
         end
       end
     end
