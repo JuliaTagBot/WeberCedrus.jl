@@ -9,7 +9,7 @@ import Base: hash, isless, ==, show
 
 type Cedrus <: Weber.Extension
   devices::PyObject
-  trial_statr::Float64
+  trial_start::Float64
 end
 
 """
@@ -25,7 +25,7 @@ buttons.
 """
 function Cedrus()
   pyxid = pyimport_conda("pyxid","pyxid","haberdashPI")
-  Cedrus(pyxid[:get_xid_devices]())
+  Cedrus(pyxid[:get_xid_devices](),Weber.tick())
 end
 
 @Weber.event type CedrusDownEvent <: Weber.ExpEvent
@@ -103,7 +103,7 @@ function reset_response(cedrus::Cedrus)
       dev[:reset_rt_timer]()
     end
   end
-  cedrus.trial_start = tick()
+  cedrus.trial_start = Weber.tick()
 end
 
 function addtrial(e::ExtendedExperiment{Cedrus},moments...)
