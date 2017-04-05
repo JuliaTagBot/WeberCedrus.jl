@@ -25,7 +25,7 @@ buttons.
 """
 function Cedrus()
   pyxid = pyimport_conda("pyxid","pyxid","haberdashPI")
-  Cedrus(pyxid[:get_xid_devices](),Weber.tick())
+  Cedrus(pyxid[:get_xid_devices](),0.0)
 end
 
 @Weber.event type CedrusDownEvent <: Weber.ExpEvent
@@ -97,6 +97,13 @@ time(e::CedrusUpEvent) = e.time
 time(e::CedrusDownEvent) = e.time
 
 function reset_response(cedrus::Cedrus)
+  n_old = length(cedrus.devices)
+  cedrus.devices = pyxid[:get_xid_devices]()
+  if n_old != length(cedrus.devices)
+    warn("Number of available Cedrus devices has changed in the middle of an ",
+         "experiment.")
+  end
+
   for dev in cedrus.devices
     if dev[:is_response_device]()
       dev[:reset_base_timer]()
