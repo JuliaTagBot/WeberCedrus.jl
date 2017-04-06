@@ -59,28 +59,7 @@ function show(io::IO,x::CedrusKey)
   end
 end
 
-merge!(Weber.str_to_code,Dict(
-  ":cedrus0:" => CedrusKey(0),
-  ":cedrus1:" => CedrusKey(1),
-  ":cedrus2:" => CedrusKey(2),
-  ":cedrus3:" => CedrusKey(3),
-  ":cedrus4:" => CedrusKey(4),
-  ":cedrus5:" => CedrusKey(5),
-  ":cedrus6:" => CedrusKey(6),
-  ":cedrus7:" => CedrusKey(7),
-  ":cedrus8:" => CedrusKey(8),
-  ":cedrus9:" => CedrusKey(9),
-  ":cedrus10:" => CedrusKey(10),
-  ":cedrus11:" => CedrusKey(11),
-  ":cedrus12:" => CedrusKey(12),
-  ":cedrus13:" => CedrusKey(13),
-  ":cedrus14:" => CedrusKey(14),
-  ":cedrus15:" => CedrusKey(15),
-  ":cedrus16:" => CedrusKey(16),
-  ":cedrus17:" => CedrusKey(17),
-  ":cedrus18:" => CedrusKey(18),
-  ":cedrus19:" => CedrusKey(19)
-))
+merge!(Weber.str_to_code,Dict(":cedrus$i:" => CedrusKey(i) for i in 0:19))
 
 keycode(e::CedrusDownEvent) = CedrusKey(e.code)
 keycode(e::CedrusUpEvent) = CedrusKey(e.code)
