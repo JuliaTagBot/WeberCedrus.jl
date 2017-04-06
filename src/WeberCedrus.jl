@@ -80,7 +80,7 @@ function reset_response(cedrus::Cedrus)
   cedrus.devices = pyxid[:get_xid_devices]()
   if old_len != length(cedrus.devices)
     warn("The number of available Cedrus devices changed from $old_len to "*
-         "$length(cedrus.devices) in the middle of an experiment!")
+         "$(length(cedrus.devices)) in the middle of an experiment!")
   end
   
   for dev in cedrus.devices
