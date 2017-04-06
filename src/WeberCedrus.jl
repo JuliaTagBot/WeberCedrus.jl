@@ -76,6 +76,13 @@ time(e::CedrusUpEvent) = e.time
 time(e::CedrusDownEvent) = e.time
 
 function reset_response(cedrus::Cedrus)
+  old_len = length(cedrus.devices)
+  cedrus.devices = pyxid[:get_xid_devices]()
+  if old_len != length(cedrus.devices)
+    warn("The number of available Cedrus devices changed from $old_len to "*
+         "$length(cedrus.devices) in the middle of an experiment!")
+  end
+  
   for dev in cedrus.devices
     if dev[:is_response_device]()
       dev[:reset_base_timer]()
