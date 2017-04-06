@@ -9,8 +9,8 @@ run_keycode_helper(extenstions=[Cedrus()])
 ```
 
 To make use of the response keys, just reference them as you would keyboard
-keys. For instance, the following would record cedrus buttons 1 and 2
-ans answer 1 and 2, in the experiment data file.
+keys. For instance, the following code will record cedrus buttons 1 and 2
+as answers1 and answer2 to the experiment data file.
 
 ```julia
 response(key":cedrus1:" => "answer1", key":cedrus2:" => "answer2")
