@@ -19,7 +19,7 @@ Creates an extension for Weber experiments allowing an experiment to respond to
 events from Cedrus response-pad hardware. You can use [`iskeydown`](@ref) and
 [`iskeyup`](@ref) to check for events. To find the keycodes of the
 buttons for your response pad, run the following code, and press each of the
-buttons.
+buttons on the response pad.
 
     run_keycode_helper(extensions=[Cedrus()])
 """
