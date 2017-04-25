@@ -25,7 +25,13 @@ buttons on the response pad.
 """
 function Cedrus()
   pyxid = pyimport_conda("pyxid","pyxid","haberdashPI")
-  Cedrus(pyxid[:get_xid_devices](),0.0)
+  pyxid[:use_response_pad_timer] = true
+  cedrus = Cedrus(pyxid[:get_xid_devices](),0.0)
+  for dev in cedrus.devices
+    if dev[:is_response_device]()
+      dev[:reset_base_timer]()
+    end
+  end
 end
 
 @Weber.event type CedrusDownEvent <: Weber.ExpEvent
@@ -85,7 +91,6 @@ function reset_response(cedrus::Cedrus)
 
   for dev in cedrus.devices
     if dev[:is_response_device]()
-      dev[:reset_base_timer]()
       dev[:reset_rt_timer]()
     end
   end
