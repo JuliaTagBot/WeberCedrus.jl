@@ -32,6 +32,7 @@ function Cedrus()
       dev[:reset_base_timer]()
     end
   end
+  cedrus
 end
 
 @Weber.event type CedrusDownEvent <: Weber.ExpEvent
