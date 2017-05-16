@@ -12,18 +12,7 @@ type Cedrus <: Weber.Extension
   trial_start::Float64
 end
 
-"""
-    Cedrus()
-
-Creates an extension for Weber experiments allowing an experiment to respond to
-events from Cedrus response-pad hardware. You can use [`iskeydown`](@ref) and
-[`iskeyup`](@ref) to check for events. To find the keycodes of the
-buttons for your response pad, run the following code, and press each of the
-buttons on the response pad.
-
-    run_keycode_helper(extensions=[Cedrus()])
-"""
-function Cedrus()
+function InitExtension()
   pyxid = pyimport_conda("pyxid","pyxid","haberdashPI")
   pyxid[:use_response_pad_timer] = true
   cedrus = Cedrus(pyxid[:get_xid_devices](),0.0)
