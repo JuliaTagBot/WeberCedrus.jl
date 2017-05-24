@@ -7,7 +7,7 @@ using Weber
 import Weber: keycode, iskeydown, iskeyup, addtrial, addpractice, poll_events
 import Base: hash, isless, ==, show
 
-type Cedrus <: Weber.Extension
+mutable struct Cedrus <: Weber.Extension
   devices::PyObject
   trial_start::Float64
 end
@@ -24,20 +24,20 @@ function InitExtension()
   cedrus
 end
 
-@Weber.event type CedrusDownEvent <: Weber.ExpEvent
+@Weber.event struct CedrusDownEvent <: Weber.ExpEvent
   code::Int
   port::Int
   time::Float64
 end
 
 
-@Weber.event type CedrusUpEvent <: Weber.ExpEvent
+@Weber.event struct CedrusUpEvent <: Weber.ExpEvent
   code::Int
   port::Int
   time::Float64
 end
 
-type CedrusKey <: Weber.Key
+struct CedrusKey <: Weber.Key
   code::Int
 end
 
